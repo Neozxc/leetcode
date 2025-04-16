@@ -2,7 +2,7 @@ class Solution:
     def countGood(self, nums: List[int], k: int) -> int:
         freq = defaultdict(int)
         total_pairs = 0
-        count = 0
+        left = 0
         answer = 0
 
         for right in range(len(nums)):
