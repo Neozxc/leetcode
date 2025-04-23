@@ -1,0 +1,31 @@
+name: Leetcode PR Checker
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  run-leetcode-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install leetcode-cli
+        run: npm install -g leetcode-cli
+
+      - name: Login to leetcode (anonymous mode)
+        run: leetcode user -d
+
+      - name: Run leetcode tests
+        run: |
+          for file in $(git diff --name-only origin/main | grep -E '^[0-9]+.*\.py$'); do
+            echo "Running Leetcode test for: $file"
+            leetcode test "$file" || exit 1
+          done
